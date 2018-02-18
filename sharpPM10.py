@@ -16,7 +16,6 @@ class sharpPM10:
         self.led_pin = led_pin
         self.pm10_pin = pm10_pin
         
-        wiringpi.wiringPiSetupGpio() 
         wiringpi.pinMode(led_pin, 1)
         wiringpi.digitalWrite(led_pin, 0)
 

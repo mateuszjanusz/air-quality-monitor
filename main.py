@@ -3,7 +3,7 @@ import sys
 import wiringpi
 import spidev
 from numpy import median
-
+import wiringpi
 import Adafruit_DHT
 import Adafruit_BMP.BMP085 as BMP085 
 from mcp3008 import MCP3008
@@ -15,15 +15,25 @@ import config
 
 print('starting...')
 dht_pin = 19
+green_led = 22
+yellow_led = 23
+
+wiringpi.wiringPiSetupGpio() 
+wiringpi.pinMode(green_led, 1)
+wiringpi.pinMode(yellow_led, 1)
+
+wiringpi.digitalWrite(yellow_led, 1) # power on the yellow LED
+wiringpi.digitalWrite(green_led, 1) # power on the green LED
 
 Adafruit_BMP085 = BMP085.BMP085()
 ADC = MCP3008(0, 0) # CE0
 MQ = MQ(adc=ADC, analog_channel=1)
 sharpPM10 = sharpPM10(led_pin=29, pm10_pin=0, adc=ADC)
- 
 
 
 while True:
+    wiringpi.digitalWrite(yellow_led, 1) # power on the yellow LED
+
     humidity, temp_dht = Adafruit_DHT.read_retry(11, dht_pin) # (sensor_type, pin_number)
     pressure = Adafruit_BMP085.read_pressure()
     temp_bmp = Adafruit_BMP085.read_temperature()
@@ -43,9 +53,12 @@ while True:
         cursor.execute(sql)
         db.commit()
         print('success')
+        wiringpi.digitalWrite(yellow_led, 0) # power off the yellow LED
     except:
         db.rollback()
         print('failed')
+        # blink yellow LED
+        blinkLed(yellow_led)
 
     db.close()
     print('connection closed')
@@ -57,4 +70,12 @@ while True:
 ##    print('Pressure: {0:0.2f} hPa').format(pressure/100)
 ##    print('Dust density: {0:0.3f} mg/m3').format(dust_density)
 ##    print('LPG: {0} ppm, CO: {1} ppm, Smoke: {2} ppm').format(gas['GAS_LPG'], gas['CO'], gas['SMOKE'])
+blinkLed(pin):
+    while True: 
+        wiringpi.digitalWrite(yellow_led, 1) # power on
+        time.sleep(1)
+        wiringpi.digitalWrite(yellow_led, 0) # power off 
+
+
+
 
