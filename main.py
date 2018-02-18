@@ -69,7 +69,7 @@ while True:
 
     db.close()
     print('connection closed')
-    time.sleep(900) #900sec = 15min
+    time.sleep(1800) #900sec = 15min
 
 ##    if humidity is not None and temperature is not None:
 ##    print('\nTemp (DHT): {0:0.1f} C  Humidity: {1:0.1f} %').format(temp_dht, humidity)
