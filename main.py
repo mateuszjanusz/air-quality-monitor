@@ -70,7 +70,7 @@ while True:
 ##    print('Pressure: {0:0.2f} hPa').format(pressure/100)
 ##    print('Dust density: {0:0.3f} mg/m3').format(dust_density)
 ##    print('LPG: {0} ppm, CO: {1} ppm, Smoke: {2} ppm').format(gas['GAS_LPG'], gas['CO'], gas['SMOKE'])
-blinkLed(pin):
+def blinkLed(pin):
     while True: 
         wiringpi.digitalWrite(yellow_led, 1) # power on
         time.sleep(1)
