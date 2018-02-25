@@ -16,7 +16,7 @@ import config
 print('starting...')
 
 dht_pin = 19
-sharp_pin = 29
+sharp_pin = 21
 sharp_channel = 0
 mq_channel = 1
 
