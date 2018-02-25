@@ -17,8 +17,6 @@ app.get('/', function (req, res) {
 app.get('/now', function (req, res) {
 	return db.query('SELECT * FROM readings ORDER BY timestamp DESC LIMIT 1', function (error, results, fields) {
 		if(error) return res.status(500).send(error);
-		console.log(results)
-		
 		res.status(200).send(results);
 	});	
 });
