@@ -18,16 +18,17 @@ app.get('/now', function (req, res) {
 	return db.query('SELECT * FROM readings ORDER BY timestamp DESC LIMIT 1', function (error, results, fields) {
 		
 		if(error) return res.status(500).send(error);
-		res.status(200).send(results);
+		res.status(200).send(results[0]);
 	});	
 });
 
 
 app.get('/today', function (req, res) {
 	return db.query(`SELECT * FROM readings 
-			WHERE DATE(timestamp) >= CURDATE() 
-			AND DATE(timestamp) < CURDATE() + INTERVAL 1 DAY`, function (error, results, fields) {
-		
+		WHERE DATE(timestamp) >= DATE((SELECT timestamp FROM readings ORDER BY timestamp DESC LIMIT 1))
+		AND DATE(timestamp) < DATE((SELECT timestamp FROM readings ORDER BY timestamp DESC LIMIT 1)) + INTERVAL 1 DAY`, 
+		function (error, results, fields) {
+	
 		if(error) return res.status(500).send(error);
 		res.status(200).send(results);
 	});	
@@ -35,8 +36,8 @@ app.get('/today', function (req, res) {
 
 app.get('/last-week', function (req, res) {
 	return db.query(`SELECT * FROM readings 
-			WHERE DATE(timestamp) >= CURDATE() - INTERVAL 7 DAY
-			AND DATE(timestamp) < CURDATE() + INTERVAL 1 DAY`, function (error, results, fields) {
+			WHERE DATE(timestamp) >= DATE((SELECT timestamp FROM readings ORDER BY timestamp DESC LIMIT 1)) - INTERVAL 7 DAY
+			AND DATE(timestamp) < DATE((SELECT timestamp FROM readings ORDER BY timestamp DESC LIMIT 1)) + INTERVAL 1 DAY`, function (error, results, fields) {
 		
 		if(error) return res.status(500).send(error);
 		res.status(200).send(results);
