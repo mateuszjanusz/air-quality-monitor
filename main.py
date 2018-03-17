@@ -16,7 +16,7 @@ import config
 print('starting...')
 
 dht_pin = 19
-sharp_pin = 29
+sharp_pin = 21
 sharp_channel = 0
 mq_channel = 1
 
@@ -54,7 +54,13 @@ while True:
     
     sql = ("INSERT INTO readings (temp, humidity, pressure, dust, lpg, co, smoke)\
             VALUES ({0:0.1f},{1:0.1f},{2:0.2f},{3:0.3f},{4:0.4f},{5:0.4f},{6:0.4f})").format(
-            temp_bmp, humidity, pressure/100, dust_density, gas['GAS_LPG'], gas['CO'], gas['SMOKE'])
+            temp_bmp or 0,
+            humidity or 0,
+            pressure/100 or 0,
+            dust_density or 0,
+            gas['GAS_LPG'] or 0,
+            gas['CO'] or 0,
+            gas['SMOKE'] or 0)
 
     try:
         cursor.execute(sql)
