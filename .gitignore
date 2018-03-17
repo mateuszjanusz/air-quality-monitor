@@ -1,4 +1,6 @@
 config.py
+config.js
+api/node_modules/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
