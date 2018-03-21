@@ -15,7 +15,9 @@ import config
 
 print('starting...')
 
+dht_model = 22
 dht_pin = 19
+
 sharp_pin = 21
 sharp_channel = 0
 mq_channel = 1
@@ -41,9 +43,9 @@ except:
 while True:
     wiringpi.digitalWrite(yellow_led, 1) # power on the yellow LED
 
-    humidity, temp_dht = Adafruit_DHT.read_retry(11, dht_pin) # (sensor_type, pin_number)
+    humidity, temp_dht = Adafruit_DHT.read_retry(dht_model, dht_pin) # (sensor_type, pin_number)
     pressure = Adafruit_BMP085.read_pressure()
-    temp_bmp = Adafruit_BMP085.read_temperature()
+##    temp_bmp = Adafruit_BMP085.read_temperature()
     dust_density = sharpPM10.read()
     gas = MQ.MQPercentage()
     
@@ -54,7 +56,7 @@ while True:
     
     sql = ("INSERT INTO readings (temp, humidity, pressure, dust, lpg, co, smoke)\
             VALUES ({0:0.1f},{1:0.1f},{2:0.2f},{3:0.3f},{4:0.4f},{5:0.4f},{6:0.4f})").format(
-            temp_bmp or 0,
+            temp_dht or 0,
             humidity or 0,
             pressure/100 or 0,
             dust_density or 0,
