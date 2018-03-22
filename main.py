@@ -5,10 +5,12 @@ import spidev
 from numpy import median
 import wiringpi
 import Adafruit_DHT
-import Adafruit_BMP.BMP085 as BMP085 
+import Adafruit_BMP.BMP085 as BMP085
+
 from mcp3008 import MCP3008
 from sharpPM10 import sharpPM10
 from mq import *
+import lcd_driver
 
 import MySQLdb
 import config
@@ -37,12 +39,14 @@ try:
     ADC = MCP3008(0, 0) # CE0
     MQ = MQ(adc=ADC, analog_channel=mq_channel)
     sharpPM10 = sharpPM10(led_pin=sharp_pin, pm10_pin=sharp_channel, adc=ADC)
+    lcd = lcd_driver.lcd()
 except:
     wiringpi.digitalWrite(green_led, 0) # power off the green LED
 
 while True:
     wiringpi.digitalWrite(yellow_led, 1) # power on the yellow LED
-
+    lcd.lcd_string('reading sensors...', 1)
+    
     humidity, temp_dht = Adafruit_DHT.read_retry(dht_model, dht_pin) # (sensor_type, pin_number)
     pressure = Adafruit_BMP085.read_pressure()
 ##    temp_bmp = Adafruit_BMP085.read_temperature()
@@ -69,8 +73,13 @@ while True:
         db.commit()
         print('success')
         wiringpi.digitalWrite(yellow_led, 0) # power off the yellow LED
+        
+        lcd.lcd_string(('Temp: {0:0.1f} C').format(temp_dht or 0), 1)
+        lcd.lcd_string(('Humidity: {0:0.1f} %').format(humidity or 0), 2)
+        
     except:
         db.rollback()
+        lcd.lcd_string('error :(', 1)
         print('failed!')
         wiringpi.digitalWrite(green_led, 0) # power off the green LED
 
