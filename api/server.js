@@ -44,6 +44,16 @@ app.get('/last-week', function (req, res) {
 	});	
 });
 
+app.get('/last-month', function (req, res) {
+	return db.query(`SELECT * FROM readings 
+			WHERE DATE(timestamp) >= DATE((SELECT timestamp FROM readings ORDER BY timestamp DESC LIMIT 1)) - INTERVAL 30 DAY
+			AND DATE(timestamp) < DATE((SELECT timestamp FROM readings ORDER BY timestamp DESC LIMIT 1)) + INTERVAL 1 DAY`, function (error, results, fields) {
+		
+		if(error) return res.status(500).send(error);
+		res.status(200).send(results);
+	});	
+});
+
 app.get('*', function(req, res){
 	res.status(404).send('you shall not pass');
 })
