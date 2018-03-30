@@ -23,10 +23,20 @@ app.get('/now', function (req, res) {
 });
 
 
+// app.get('/today', function (req, res) {
+// 	return db.query(`SELECT * FROM readings 
+// 		WHERE DATE(timestamp) >= DATE((SELECT timestamp FROM readings ORDER BY timestamp DESC LIMIT 1))
+// 		AND DATE(timestamp) < DATE((SELECT timestamp FROM readings ORDER BY timestamp DESC LIMIT 1)) + INTERVAL 1 DAY`, 
+// 		function (error, results, fields) {
+	
+// 		if(error) return res.status(500).send(error);
+// 		res.status(200).send(results);
+// 	});	
+// });
+
 app.get('/today', function (req, res) {
 	return db.query(`SELECT * FROM readings 
-		WHERE DATE(timestamp) >= DATE((SELECT timestamp FROM readings ORDER BY timestamp DESC LIMIT 1))
-		AND DATE(timestamp) < DATE((SELECT timestamp FROM readings ORDER BY timestamp DESC LIMIT 1)) + INTERVAL 1 DAY`, 
+		WHERE DATE(timestamp) = DATE((SELECT timestamp FROM readings ORDER BY timestamp DESC LIMIT 1))`, 
 		function (error, results, fields) {
 	
 		if(error) return res.status(500).send(error);
