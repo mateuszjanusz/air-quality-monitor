@@ -117,6 +117,11 @@ class lcd:
       for i in range(LCD_WIDTH):
         self.lcd_byte(ord(message[i]),LCD_CHR)
 
+    def lcd_print(self, lines): 
+      for i in range(2):
+        text = lines[i]
+        self.lcd_string(text, i)
+
 ##def main():
 ##  # Main program block
 ##

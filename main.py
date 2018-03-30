@@ -15,6 +15,9 @@ import lcd_driver
 import MySQLdb
 import config
 
+degree_symbol = u"\u00b0"
+
+
 print('starting...')
 
 dht_model = 22
@@ -45,7 +48,7 @@ except:
 
 while True:
     wiringpi.digitalWrite(yellow_led, 1) # power on the yellow LED
-    lcd.lcd_string('reading sensors...', 1)
+    lcd.lcd_print(['reading sensors...'])
     
     humidity, temp_dht = Adafruit_DHT.read_retry(dht_model, dht_pin) # (sensor_type, pin_number)
     pressure = Adafruit_BMP085.read_pressure()
@@ -74,12 +77,17 @@ while True:
         print('success')
         wiringpi.digitalWrite(yellow_led, 0) # power off the yellow LED
         
-        lcd.lcd_string(('Temp: {0:0.1f} C').format(temp_dht or 0), 1)
-        lcd.lcd_string(('Humidity: {0:0.1f} %').format(humidity or 0), 2)
+        # lcd.lcd_string(('Temp: {0:0.1f}{degree_symbol}C').format(temp_dht or 0), 1)
+        # lcd.lcd_string(('Humidity: {0:0.1f}%').format(humidity or 0), 2)
+        lcd.lcd_print([
+            ('Temp: {0:0.1f}{degree_symbol}C').format(temp_dht or 0),
+            ('Humidity: {0:0.1f}%').format(humidity or 0)
+        ])
         
     except:
         db.rollback()
-        lcd.lcd_string('error :(', 1)
+        lcd.lcd_print(['error :('])
+        # lcd.lcd_string('error :(', 1)
         print('failed!')
         wiringpi.digitalWrite(green_led, 0) # power off the green LED
 
