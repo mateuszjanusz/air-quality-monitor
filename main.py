@@ -21,11 +21,11 @@ degree_symbol = u"\u00b0"
 print('starting...')
 
 dht_model = 22
-dht_pin = 19
+dht_pin = 4
 
 sharp_pin = 21
-sharp_channel = 0
-mq_channel = 1
+sharp_channel = 1
+mq_channel = 0
 
 green_led = 6
 yellow_led = 13
@@ -53,7 +53,8 @@ while True:
     humidity, temp_dht = Adafruit_DHT.read_retry(dht_model, dht_pin) # (sensor_type, pin_number)
     pressure = Adafruit_BMP085.read_pressure()
 ##    temp_bmp = Adafruit_BMP085.read_temperature()
-    dust_density = sharpPM10.read()
+##    dust_density = sharpPM10.read()
+    dust_density = 0 
     gas = MQ.MQPercentage()
     
     db = MySQLdb.connect(config.host, config.user, config.password, config.db_name)
@@ -80,7 +81,7 @@ while True:
         # lcd.lcd_string(('Temp: {0:0.1f}{degree_symbol}C').format(temp_dht or 0), 1)
         # lcd.lcd_string(('Humidity: {0:0.1f}%').format(humidity or 0), 2)
         lcd.lcd_print([
-            ('Temp: {0:0.1f}{degree_symbol}C').format(temp_dht or 0),
+            ('Temp: {0:0.1f}C').format(temp_dht or 0),
             ('Humidity: {0:0.1f}%').format(humidity or 0)
         ])
         

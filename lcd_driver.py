@@ -119,8 +119,10 @@ class lcd:
 
     def lcd_print(self, lines): 
       for i in range(2):
-        text = lines[i]
-        self.lcd_string(text, i)
+        j = i + 1
+        if i < len(lines):
+            text = lines[i]
+            self.lcd_string(text, j)
 
 ##def main():
 ##  # Main program block
