@@ -52,9 +52,7 @@ while True:
     
     humidity, temp_dht = Adafruit_DHT.read_retry(dht_model, dht_pin) # (sensor_type, pin_number)
     pressure = Adafruit_BMP085.read_pressure()
-##    temp_bmp = Adafruit_BMP085.read_temperature()
-##    dust_density = sharpPM10.read()
-    dust_density = 0 
+    dust_density = sharpPM10.read()
     gas = MQ.MQPercentage()
     
     db = MySQLdb.connect(config.host, config.user, config.password, config.db_name)
@@ -78,8 +76,6 @@ while True:
         print('success')
         wiringpi.digitalWrite(yellow_led, 0) # power off the yellow LED
         
-        # lcd.lcd_string(('Temp: {0:0.1f}{degree_symbol}C').format(temp_dht or 0), 1)
-        # lcd.lcd_string(('Humidity: {0:0.1f}%').format(humidity or 0), 2)
         lcd.lcd_print([
             ('Temp: {0:0.1f}C').format(temp_dht or 0),
             ('Humidity: {0:0.1f}%').format(humidity or 0)
@@ -88,7 +84,6 @@ while True:
     except:
         db.rollback()
         lcd.lcd_print(['error :('])
-        # lcd.lcd_string('error :(', 1)
         print('failed!')
         wiringpi.digitalWrite(green_led, 0) # power off the green LED
 
@@ -96,15 +91,4 @@ while True:
     db.close()
     print('connection closed')
     time.sleep(1800) #900sec = 15min
-
-##    if humidity is not None and temperature is not None:
-##    print('\nTemp (DHT): {0:0.1f} C  Humidity: {1:0.1f} %').format(temp_dht, humidity)
-##    print('Temp (BMP): {0:0.1f} C').format(temp_bmp) 
-##    print('Pressure: {0:0.2f} hPa').format(pressure/100)
-##    print('Dust density: {0:0.3f} mg/m3').format(dust_density)
-##    print('LPG: {0} ppm, CO: {1} ppm, Smoke: {2} ppm').format(gas['GAS_LPG'], gas['CO'], gas['SMOKE'])
-
-
-
-
 
